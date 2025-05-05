@@ -4,20 +4,10 @@
     <title>Media Library</title>
 </head>
 <body>
-    <h1>Available Videos</h1>
-    <% const grouped = {}; Object.values(media).forEach(item => {
-        if (!grouped[item.category]) grouped[item.category] = [];
-        grouped[item.category].push(item);
-    }); %>
-    
-    <% Object.keys(grouped).forEach(category => { %>
-        <h2><%= category %></h2>
-        <ul>
-            <% grouped[category].forEach(item => { %>
-                <li><a href="/media/<%= item.name %>"><%= item.name %></a></li>
-            <% }); %>
-        </ul>
-    <% }); %>
-    
+    <h1>Welcome to the Media Server</h1>
+    <ul>
+        <li><a href="/movies">Browse Movies</a></li>
+        <li><a href="/tv">Browse TV Shows</a></li>
+    </ul>
 </body>
 </html>

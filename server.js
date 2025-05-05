@@ -20,12 +20,11 @@ function getMediaFiles() {
             const stat = fs.statSync(fullPath);
 
             if (stat.isDirectory()) {
-                // Use directory name (Movies, tv, etc.) as category
-                const subCategory = path.relative(mediaRoot, fullPath).split(path.sep)[0];
+                const subCategory = path.relative(mediaRoot, fullPath).split(path.sep)[0]; // 'Movies' or 'tv'
                 walkDir(fullPath, subCategory);
             } else if (path.extname(file) === '.mp4') {
                 const name = path.parse(file).name;
-                const relativePath = path.relative(mediaRoot, fullPath).replace(/\\/g, '/'); // ensure POSIX-style
+                const relativePath = path.relative(mediaRoot, fullPath).replace(/\\/g, '/'); // normalize for URL
                 media[name] = {
                     name: name,
                     filename: relativePath,
@@ -39,10 +38,21 @@ function getMediaFiles() {
     return media;
 }
 
-
+// Routes
 app.get('/', (req, res) => {
+    res.render('index'); // Just links to /movies and /tv
+});
+
+app.get('/movies', (req, res) => {
     const media = getMediaFiles();
-    res.render('index', { media });
+    const movies = Object.values(media).filter(item => item.category === 'Movies');
+    res.render('category', { title: 'Movies', media: movies });
+});
+
+app.get('/tv', (req, res) => {
+    const media = getMediaFiles();
+    const tv = Object.values(media).filter(item => item.category === 'tv');
+    res.render('category', { title: 'TV Shows', media: tv });
 });
 
 app.get('/media/:key', (req, res) => {
