@@ -55,8 +55,9 @@ app.get('/movies', (req, res) => {
 app.get('/tv', (req, res) => {
     const media = getMediaFiles();
     const tvShows = Object.values(media).filter(item => item.category === 'Tv');
-    res.render('categories', { title: 'TV Shows', media: tv });
+    res.render('categories', { title: 'TV Shows', media: tvShows });
 });
+
 
 
 app.get('/media/:key', (req, res) => {
