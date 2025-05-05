@@ -4,6 +4,12 @@
     <title><%= media.name %></title>
 </head>
 <body>
+    <%- include('partials/navbar', {
+        parentPath: parentPath,
+        prevVideo: prevVideo,
+        nextVideo: nextVideo
+    }) %>
+    
     <h1>Now Playing: <%= media.name %></h1>
     <video width="640" height="360" controls>
         <source src="/media/<%= media.filename %>" type="video/mp4">

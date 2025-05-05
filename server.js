@@ -6,6 +6,24 @@ const app = express();
 app.set('view engine', 'ejs');
 app.set('views', './views');
 app.use(express.static('public'));
+app.use((req, res, next) => {
+    // Default values
+    res.locals.prevVideo = null;
+    res.locals.nextVideo = null;
+
+    // Try to compute parentPath
+    const segments = req.path.split('/').filter(Boolean); // removes empty elements
+    if (segments.length > 0) {
+        const parent = '/' + segments.slice(0, -1).join('/');
+        res.locals.parentPath = parent === '' ? '/' : parent;
+    } else {
+        res.locals.parentPath = null;
+    }
+
+    next();
+});
+
+
 app.use('/media', express.static(path.join(__dirname, 'media'))); // Serve video files statically
 
 // Dynamically read .mp4 files
@@ -177,11 +195,27 @@ app.get('/tv/:showName/:seasonName/:language', (req, res) => {
 app.get('/media/:key', (req, res) => {
     const media = getMediaFiles();
     const item = media[req.params.key];
+
     if (item) {
+        const folderPath = path.dirname(item.filename).replace(/\\/g, '/');
+        const folderItems = Object.values(media)
+            .filter(m => path.dirname(m.filename).replace(/\\/g, '/') === folderPath)
+            .sort((a, b) => a.filename.localeCompare(b.filename));
+
+        const index = folderItems.findIndex(m => m.name === item.name);
+        const prev = folderItems[index - 1] || null;
+        const next = folderItems[index + 1] || null;
+
+        res.locals.parentPath = '/' + path.dirname(item.filename).replace(/\\/g, '/');
+        res.locals.prevVideo = prev;
+        res.locals.nextVideo = next;
+
         res.render('player', { media: item });
     } else {
         res.status(404).send('Media not found');
     }
 });
+
+
 
 app.listen(3000, () => console.log('Server running on http://localhost:3000'));

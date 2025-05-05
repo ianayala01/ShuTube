@@ -1,0 +1,19 @@
+<!-- views/partials/navbar.ejs -->
+<nav style="padding: 1em; background: #eee; display: flex; gap: 1em;">
+    <a href="/">🏠 Home</a>
+
+    <% if (parentPath) { %>
+        <a href="<%= parentPath %>">⬆️ Up</a>
+    <% } %>
+
+    <% if (prevVideo || nextVideo) { %>
+        <div style="margin-left:auto;">
+            <% if (prevVideo) { %>
+                <a href="/media/<%= prevVideo %>">⬅️ Previous</a>
+            <% } %>
+            <% if (nextVideo) { %>
+                <a href="/media/<%= nextVideo %>">Next ➡️</a>
+            <% } %>
+        </div>
+    <% } %>
+</nav>
