@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Media Library</title>
+</head>
+<body>
+    <h1>Available Videos</h1>
+    <% const grouped = {}; Object.values(media).forEach(item => {
+        if (!grouped[item.category]) grouped[item.category] = [];
+        grouped[item.category].push(item);
+    }); %>
+    
+    <% Object.keys(grouped).forEach(category => { %>
+        <h2><%= category %></h2>
+        <ul>
+            <% grouped[category].forEach(item => { %>
+                <li><a href="/media/<%= item.name %>"><%= item.name %></a></li>
+            <% }); %>
+        </ul>
+    <% }); %>
+    
+</body>
+</html>
