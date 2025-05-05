@@ -40,6 +40,20 @@ function getMediaFiles() {
     walkDir(mediaRoot, null);
     return media;
 }
+function getTvShows() {
+    const tvDir = path.join(__dirname, 'media', 'tv');
+    const entries = fs.readdirSync(tvDir, { withFileTypes: true });
+
+    const shows = entries
+        .filter(entry => entry.isDirectory())
+        .map(entry => ({
+            name: entry.name,
+            path: `/tv/${encodeURIComponent(entry.name)}`
+        }));
+
+    return shows;
+}
+
 
 // Routes
 app.get('/', (req, res) => {
@@ -53,9 +67,59 @@ app.get('/movies', (req, res) => {
 });
 
 app.get('/tv', (req, res) => {
-    const media = getMediaFiles();
-    const tvShows = Object.values(media).filter(item => item.category === 'Tv');
-    res.render('categories', { title: 'TV Shows', media: tvShows });
+    const tvShows = getTvShows();
+    res.render('tvShows', { title: 'Browse TV Shows', shows: tvShows });
+});
+
+app.get('/tv/:showName', (req, res) => {
+    const showName = req.params.showName;
+    const showDir = path.join(__dirname, 'media', 'tv', showName);
+
+    if (!fs.existsSync(showDir)) {
+        return res.status(404).send('TV show not found');
+    }
+
+    const entries = fs.readdirSync(showDir, { withFileTypes: true });
+    const seasons = entries
+        .filter(entry => entry.isDirectory())
+        .map(dir => ({
+            name: dir.name,
+            path: `/tv/${showName}/${dir.name}`
+        }));
+
+    // If no subdirs, fall back to showing .mp4 files in show root
+    if (seasons.length === 0) {
+        const files = entries
+            .filter(entry => entry.isFile() && entry.name.endsWith('.mp4'))
+            .map(entry => {
+                const name = path.parse(entry.name).name;
+                const filename = path.join('tv', showName, entry.name).replace(/\\/g, '/');
+                return { name, filename };
+            });
+        return res.render('categories', { title: showName, media: files });
+    }
+
+    // Otherwise, render season list as clickable links
+    res.render('list', { title: `${showName} Seasons`, items: seasons });
+});
+
+app.get('/tv/:showName/:seasonName', (req, res) => {
+    const { showName, seasonName } = req.params;
+    const seasonDir = path.join(__dirname, 'media', 'tv', showName, seasonName);
+
+    if (!fs.existsSync(seasonDir)) {
+        return res.status(404).send('Season not found');
+    }
+
+    const files = fs.readdirSync(seasonDir)
+        .filter(file => file.endsWith('.mp4'))
+        .map(file => {
+            const name = path.parse(file).name;
+            const filename = path.join('tv', showName, seasonName, file).replace(/\\/g, '/');
+            return { name, filename };
+        });
+
+    res.render('categories', { title: `${showName} - ${seasonName}`, media: files });
 });
 
 

@@ -1,0 +1,16 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title><%= title %></title>
+</head>
+<body>
+    <h1><%= title %></h1>
+    <ul>
+        <% items.forEach(item => { %>
+            <li><a href="<%= item.path %>"><%= item.name %></a></li>
+        <% }) %>
+    </ul>
+    <br>
+    <a href="/">Back to Home</a>
+</body>
+</html>
