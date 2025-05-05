@@ -111,17 +111,67 @@ app.get('/tv/:showName/:seasonName', (req, res) => {
         return res.status(404).send('Season not found');
     }
 
-    const files = fs.readdirSync(seasonDir)
-        .filter(file => file.endsWith('.mp4'))
-        .map(file => {
-            const name = path.parse(file).name;
-            const filename = path.join('tv', showName, seasonName, file).replace(/\\/g, '/');
+    const entries = fs.readdirSync(seasonDir, { withFileTypes: true });
+
+    // Check for sub/dub folders
+    const subDubDirs = entries
+        .filter(entry => entry.isDirectory() && (entry.name.toLowerCase() === 'sub' || entry.name.toLowerCase() === 'dub'))
+        .map(dir => ({
+            name: dir.name.toUpperCase(),
+            path: `/tv/${showName}/${seasonName}/${dir.name}`
+        }));
+
+    if (subDubDirs.length > 0) {
+        return res.render('list', {
+            title: `${showName} - ${seasonName}`,
+            items: subDubDirs
+        });
+    }
+
+    // Fallback: just list .mp4 files in this season folder
+    const episodes = entries
+        .filter(entry => entry.isFile() && entry.name.endsWith('.mp4'))
+        .map(entry => {
+            const name = path.parse(entry.name).name;
+            const filename = path.join('tv', showName, seasonName, entry.name).replace(/\\/g, '/');
             return { name, filename };
         });
 
-    res.render('categories', { title: `${showName} - ${seasonName}`, media: files });
+    if (episodes.length === 0) {
+        return res.status(404).send('No episodes found in this season.');
+    }
+
+    res.render('categories', {
+        title: `${showName} - ${seasonName}`,
+        media: episodes
+    });
 });
 
+app.get('/tv/:showName/:seasonName/:language', (req, res) => {
+    const { showName, seasonName, language } = req.params;
+    const langDir = path.join(__dirname, 'media', 'tv', showName, seasonName, language);
+
+    if (!fs.existsSync(langDir)) {
+        return res.status(404).send('Language folder not found');
+    }
+
+    const files = fs.readdirSync(langDir)
+        .filter(file => file.endsWith('.mp4'))
+        .map(file => {
+            const name = path.parse(file).name;
+            const filename = path.join('tv', showName, seasonName, language, file).replace(/\\/g, '/');
+            return { name, filename };
+        });
+
+    if (files.length === 0) {
+        return res.status(404).send('No episodes found in this language folder.');
+    }
+
+    res.render('categories', {
+        title: `${showName} - ${seasonName} (${language.toUpperCase()})`,
+        media: files
+    });
+});
 
 
 app.get('/media/:key', (req, res) => {
