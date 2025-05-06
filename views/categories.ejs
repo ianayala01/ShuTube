@@ -5,16 +5,16 @@
 </head>
 <body>
     <%- include('partials/navbar') %>
-
+<!-- episodes page -->
     <h1><%= title %></h1>
     <ul>
         <ul>
             <% media.forEach(item => { %>
-                <li><a href="/media/<%= item.filename %>"><%= item.name %></a></li>
+                <li><a href="/media/<%= item.name %>"><%= item.name %></a></li>
             <% }) %>
         </ul>
         
     <br>
-    <a href="/">Back to Home</a>
+ 
 </body>
 </html>

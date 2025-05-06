@@ -196,26 +196,31 @@ app.get('/media/:key', (req, res) => {
     const media = getMediaFiles();
     const item = media[req.params.key];
 
-    if (item) {
-        const folderPath = path.dirname(item.filename).replace(/\\/g, '/');
-        const folderItems = Object.values(media)
-            .filter(m => path.dirname(m.filename).replace(/\\/g, '/') === folderPath)
-            .sort((a, b) => a.filename.localeCompare(b.filename));
+// Inside /media/:key
+if (item) {
+    const folderPath = path.dirname(item.filename).replace(/\\/g, '/');
+    const segments = folderPath.split('/');
 
-        const index = folderItems.findIndex(m => m.name === item.name);
-        const prev = folderItems[index - 1] || null;
-        const next = folderItems[index + 1] || null;
-
-        res.locals.parentPath = '/' + path.dirname(item.filename).replace(/\\/g, '/');
-        res.locals.prevVideo = prev;
-        res.locals.nextVideo = next;
-
-        res.render('player', { media: item });
+    let parentPath;
+    if (item.category === 'Movies') {
+        parentPath = '/movies';
+    } else if (segments.length >= 2 && segments[0] === 'tv') {
+        const [_, show, season, lang] = segments;
+        if (lang) {
+            parentPath = `/tv/${show}/${season}`;
+        } else if (season) {
+            parentPath = `/tv/${show}`;
+        } else {
+            parentPath = '/tv';
+        }
     } else {
-        res.status(404).send('Media not found');
+        parentPath = '/';
     }
+
+    res.locals.parentPath = parentPath;
+
+}
+
 });
-
-
 
 app.listen(3000, () => console.log('Server running on http://localhost:3000'));
