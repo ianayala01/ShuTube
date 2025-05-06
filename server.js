@@ -196,31 +196,32 @@ app.get('/media/:key', (req, res) => {
     const media = getMediaFiles();
     const item = media[req.params.key];
 
-// Inside /media/:key
-if (item) {
-    const folderPath = path.dirname(item.filename).replace(/\\/g, '/');
-    const segments = folderPath.split('/');
+    if (item) {
+        const folderPath = path.dirname(item.filename).replace(/\\/g, '/');
+        const folderItems = Object.values(media)
+            .filter(m => path.dirname(m.filename).replace(/\\/g, '/') === folderPath)
+            .sort((a, b) => a.filename.localeCompare(b.filename));
 
-    let parentPath;
-    if (item.category === 'Movies') {
-        parentPath = '/movies';
-    } else if (segments.length >= 2 && segments[0] === 'tv') {
-        const [_, show, season, lang] = segments;
-        if (lang) {
-            parentPath = `/tv/${show}/${season}`;
-        } else if (season) {
-            parentPath = `/tv/${show}`;
-        } else {
-            parentPath = '/tv';
+        const index = folderItems.findIndex(m => m.name === item.name);
+        const prev = folderItems[index - 1] || null;
+        const next = folderItems[index + 1] || null;
+
+        // Check for subtitle file
+        const vttPath = path.join(__dirname, 'media', item.filename.replace(/\.mp4$/, '.vtt'));
+        const hasSubtitles = fs.existsSync(vttPath);
+        if (hasSubtitles) {
+            item.subtitle = item.filename.replace(/\.mp4$/, '.vtt'); // relative path for use in <track>
         }
+
+        res.locals.parentPath = '/' + path.dirname(item.filename).replace(/\\/g, '/');
+        res.locals.prevVideo = prev;
+        res.locals.nextVideo = next;
+
+        res.render('player', { media: item, title: item.name });
     } else {
-        parentPath = '/';
+        res.status(404).send('Media not found');
     }
-
-    res.locals.parentPath = parentPath;
-
-}
-
 });
+
 
 app.listen(3000, () => console.log('Server running on http://localhost:3000'));

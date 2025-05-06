@@ -1,21 +1,31 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title><%= media.name %></title>
+    <title><%= title %></title>
 </head>
 <body>
-    <%- include('partials/navbar', {
-        parentPath: parentPath,
-        prevVideo: prevVideo,
-        nextVideo: nextVideo
-    }) %>
-    
-    <h1>Now Playing: <%= media.name %></h1>
-    <video width="640" height="360" controls>
+    <%- include('partials/navbar') %>
+
+    <h1><%= media.name %></h1>
+
+    <video width="720" controls>
         <source src="/media/<%= media.filename %>" type="video/mp4">
+        <% if (media.subtitle) { %>
+            <track label="English" kind="subtitles" srclang="en" src="/media/<%= media.subtitle %>" default>
+        <% } %>
         Your browser does not support the video tag.
     </video>
-    <br>
- 
+
+    <!-- <div>
+        <% if (prevVideo) { %>
+            <a href="/media/<%= prevVideo.name %>">Previous: <%= prevVideo.name %></a>
+        <% } %>
+        <% if (nextVideo) { %>
+            <a href="/media/<%= nextVideo.name %>">Next: <%= nextVideo.name %></a>
+        <% } %>
+        <% if (parentPath) { %>
+            <a href="<%= parentPath %>">Up One Directory</a>
+        <% } %>
+    </div> -->
 </body>
 </html>
