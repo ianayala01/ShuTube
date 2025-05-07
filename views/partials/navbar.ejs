@@ -1,15 +1,17 @@
-<nav style="display: flex; gap: 1rem; padding: 1rem; background: #f0f0f0;">
-    <a href="/">Home</a>
+<nav id="navbar">
+    <button class="nav-btn" onclick="window.location.href='/'">
+        Home
+    </button>
 
     <% if (parentPath && parentPath !== '/') { %>
-        <a href="<%= parentPath %>">Up One Directory</a>
+        <button class="nav-btn" onclick="window.location.href='<%= parentPath %>'">Up One Directory</button>
     <% } %>
 
     <% if (prevVideo) { %>
-        <a href="/media/<%= prevVideo.name %>">Previous</a>
+        <button class="nav-btn" onclick="window.location.href='/media/<%= prevVideo.name %>'">Previous</a>
     <% } %>
 
     <% if (nextVideo) { %>
-        <a href="/media/<%= nextVideo.name %>">Next</a>
+        <button class="nav-btn" onclick="window.location.href='/media/<%= nextVideo.name %>'">Next</a>
     <% } %>
 </nav>
