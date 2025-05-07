@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title><%= title %></title>
+</head>
+<body>
+    <%- include('partials/navbar') %>
+
+    <h1>Search Results for "<%= query %>"</h1>
+
+    <% if (results.length > 0) { %>
+        <ul>
+            <% results.forEach(result => { %>
+                <li><%= result %></li>
+            <% }) %>
+        </ul>
+    <% } else { %>
+        <p>No results found.</p>
+    <% } %>
+</body>
+</html>
