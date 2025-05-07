@@ -7,10 +7,10 @@
 <body>
     <%- include('partials/navbar') %>
 <!-- show/seasons page -->
-    <h1><%= title %></h1>
-    <ul>
+    <h1 class="vid-head"><%= title %></h1>
+    <ul class="bullet">
         <% items.forEach(item => { %>
-            <li><a href="<%= item.path %>"><%= item.name %></a></li>
+            <li><a class="vid-link" href="<%= item.path %>"><%= item.name %></a></li>
         <% }) %>
     </ul>
     <br>

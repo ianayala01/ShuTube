@@ -7,11 +7,11 @@
 <body>
     <%- include('partials/navbar') %>
 <!-- episodes page -->
-    <h1><%= title %></h1>
+    <h1 class="vid-head"><%= title %></h1>
     <ul>
         <ul>
             <% media.forEach(item => { %>
-                <li><a href="/media/<%= item.name %>"><%= item.name %></a></li>
+                <li><a class="vid-link" href="/media/<%= item.name %>"><%= item.name %></a></li>
             <% }) %>
         </ul>
         

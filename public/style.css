@@ -5,29 +5,10 @@ body {
     font-family: cinzel, serif;
     font-weight: 400;
     font-style: normal;
-}
-
-#header {
-    background-image: url("./images/newHeader.jpg");
-    background-size: cover;
-    background-repeat: no-repeat;
-    background-position: center;
-    color: whitesmoke;
-    text-shadow: 0 0 5px black;
-    font-family: "lora", serif;
-    font-weight: 500;
-    padding-bottom: 15px;
-}
-
-#header-text {
-    font-size: 50px;
-    margin: 0;
-    padding-top: 150px;
-}
-
-#header-subtext {
-    font-size: 30px;
-    margin: 0;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
 }
 
 #logo {
@@ -41,12 +22,12 @@ body {
     align-items: center;
     justify-content: space-evenly;
 
-
+    width: 100%;
     padding-top: 7px;
     padding-bottom: 7px;
     background-image: linear-gradient(to right, #144f72, #0A3D5A, #144f72);
     box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.5);
-    margin-bottom: 20px;
+    margin-bottom: 40px;
 
     border-top: solid 2px;
     border-bottom: solid 1px;
@@ -102,6 +83,8 @@ body {
 }
 
 .vid-head {
+    color: #E3A957;
+    text-shadow: 0 0 20px black;
     border-bottom: solid 4px;
     border-image-slice: 1;
     border-image-source: linear-gradient(to right, #3C3C3C, #E3A957, #3C3C3C);
@@ -114,20 +97,22 @@ body {
 }
 
 .vid-img {
-    border-radius: 4px;
+    border-radius: 10px;
     box-shadow: 2px 2px 6px rgba(0, 0, 0, 0.5);
     overflow: hidden;
 }
 
-.fact-link {
+.vid-link {
     color: #B2761E;
+    font-size: 30px;
+    margin-bottom: 10px;
 }
 
-.fact-link:hover {
+.vid-link:hover {
     color: #FFA73B;
 }
 
-.fact-link:visited {
+.vid-link:visited {
     color: #8F5E18;
 }
 
