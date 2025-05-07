@@ -7,26 +7,16 @@
 <body>
     <%- include('partials/navbar') %>
 
-    <h1><%= media.name %></h1>
+    <div class="vid">
+        <h1><%= media.name %></h1>
 
-    <video width="720" controls>
-        <source src="/media/<%= media.filename %>" type="video/mp4">
-        <% if (media.subtitle) { %>
-            <track label="English" kind="subtitles" srclang="en" src="/media/<%= media.subtitle %>" default>
-        <% } %>
-        Your browser does not support the video tag.
-    </video>
-
-    <!-- <div>
-        <% if (prevVideo) { %>
-            <a href="/media/<%= prevVideo.name %>">Previous: <%= prevVideo.name %></a>
-        <% } %>
-        <% if (nextVideo) { %>
-            <a href="/media/<%= nextVideo.name %>">Next: <%= nextVideo.name %></a>
-        <% } %>
-        <% if (parentPath) { %>
-            <a href="<%= parentPath %>">Up One Directory</a>
-        <% } %>
-    </div> -->
+        <video width="720" controls>
+            <source src="/media/<%= media.filename %>" type="video/mp4" class="vid-img">
+            <% if (media.subtitle) { %>
+                <track label="English" kind="subtitles" srclang="en" src="/media/<%= media.subtitle %>" default>
+            <% } %>
+            Your browser does not support the video tag.
+        </video>
+    </div>
 </body>
 </html>

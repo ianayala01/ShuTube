@@ -85,10 +85,12 @@ body {
     cursor: pointer;
 }
 
-.fact {
+.vid {
     padding: 20px;
     display: flex;
     flex-direction: column;
+    justify-content: center;
+    align-items: center;
     margin: 10px auto;
     max-width: 65%;
     border: solid 1px #967C52;
@@ -99,7 +101,7 @@ body {
     text-shadow: 0 0 20px black;
 }
 
-.fact-head {
+.vid-head {
     border-bottom: solid 4px;
     border-image-slice: 1;
     border-image-source: linear-gradient(to right, #3C3C3C, #E3A957, #3C3C3C);
@@ -111,9 +113,10 @@ body {
     display: inline-block;
 }
 
-.fact-img {
+.vid-img {
     border-radius: 4px;
     box-shadow: 2px 2px 6px rgba(0, 0, 0, 0.5);
+    overflow: hidden;
 }
 
 .fact-link {
