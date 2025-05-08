@@ -8,11 +8,9 @@
     <%- include('partials/navbar') %>
 <!-- show/seasons page -->
     <h1 class="vid-head"><%= title %></h1>
-    <ul class="bullet">
         <% items.forEach(item => { %>
-            <li><a class="vid-link" href="<%= item.path %>"><%= item.name %></a></li>
+            <p><a class="vid-link" href="<%= item.path %>"><%= item.name %></a></p>
         <% }) %>
-    </ul>
     <br>
 
 </body>
