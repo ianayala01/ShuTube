@@ -10,7 +10,7 @@
     <div class="vid">
         <h1><%= media.name %></h1>
 
-        <video width="720" controls >
+        <video controls class="vid-player">
             <source src="/media/<%= media.filename %>" type="video/mp4" class="vid-img">
             <% if (media.subtitle) { %>
                 <track label="English" kind="subtitles" srclang="en" src="/media/<%= media.subtitle %>" default>

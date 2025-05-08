@@ -14,7 +14,6 @@ body {
 #logo {
     height: 50px;
     margin: 0;
-
 }
 
 #navbar {
@@ -67,7 +66,7 @@ body {
 }
 
 .vid {
-    padding: 20px;
+    padding: 20px 10px;
     display: flex;
     flex-direction: column;
     justify-content: center;
@@ -92,6 +91,11 @@ body {
     font-family: "cinzel decorative", serif;
 }
 
+.vid-player{
+    height: fit-content;
+    max-width: 80%;
+    height: auto;
+}
 .fact p {
     display: inline-block;
 }
