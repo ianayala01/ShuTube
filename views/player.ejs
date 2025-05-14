@@ -22,29 +22,24 @@
             <input type="checkbox" id="autoplayToggle"/>
             Autoplay Next
         </label>
-        <script>
-            const video = document.querySelector('video');
-            const autoplayToggle = document.getElementById('autoplayToggle');
-          
-            // Load saved toggle preference
-            autoplayToggle.checked = localStorage.getItem('autoplayNext') === 'true';
-          
-            autoplayToggle.addEventListener('change', () => {
-              localStorage.setItem('autoplayNext', autoplayToggle.checked);
-            });
-          
-            video.addEventListener('ended', () => {
-              if (autoplayToggle.checked) {
-                const nextLink = document.querySelector("a[href*='<%= nextVideo.name %>]'");
-                if (nextLink) {
-                  window.location.href = nextLink.href;
-                }
-              }
-            });
-          </script>
+
+  <% if (nextVideo) { %>
+    <script>
+      document.addEventListener('DOMContentLoaded', () => {
+        const video = document.querySelector('video');
+        const autoplayToggle = document.getElementById('autoplayToggle');
+
+        video.addEventListener('ended', () => {
+          if (autoplayToggle && autoplayToggle.checked) {
+            // Same logic as Next button
+            window.location.href = '/media/<%= nextVideo.name %>';
+          }
+        });
+      });
+    </script>
+  <% } %>
+
           
     </div>
 </body>
 </html>
-
-<!-- 'a[href*="Next"]' -->
