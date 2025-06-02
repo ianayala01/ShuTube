@@ -2,6 +2,8 @@ const express = require('express');
 const fs = require('fs');
 const path = require('path');
 const app = express();
+//const media_dir = '/media/popper/Fisky/media'; //dir for raspberry pi
+const media_dir = './media'; //dir for VS code on Jobin
 
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'ejs');
@@ -26,12 +28,12 @@ app.use((req, res, next) => {
 });
 
 
-app.use('/media', express.static(path.join(__dirname, 'media'))); // Serve video files statically, use next ln for pi server
-//app.use('/media', express.static('/media/popper/Fisky/media'));
+//app.use('/media', express.static(path.join(__dirname, 'media'))); // Serve video files statically, use next ln for pi server
+app.use('/media', express.static('/media/popper/Fisky/media'));
 
 // Dynamically read .mp4 files
 function getMediaFiles() {
-    const mediaRoot = path.join(__dirname, 'media');
+    const mediaRoot = path.join(media_dir);
     const media = {};
 
     function walkDir(dir, category) {
@@ -39,16 +41,16 @@ function getMediaFiles() {
         files.forEach(file => {
             const fullPath = path.join(dir, file);
             const stat = fs.statSync(fullPath);
-    
+
             if (stat.isDirectory()) {
                 // Correctly handle category capitalization (Movies, tv)
-                const relative = path.relative(path.join(__dirname, 'media'), fullPath);
+                const relative = path.relative(path.join(media_dir), fullPath);
                 const parts = relative.split(path.sep);
                 const topLevelCategory = parts[0].charAt(0).toUpperCase() + parts[0].slice(1); // Capitalize category
                 walkDir(fullPath, topLevelCategory); // Keep category consistent
             } else if (path.extname(file) === '.mp4') {
                 const name = path.parse(file).name;
-                const relativePath = path.relative(path.join(__dirname, 'media'), fullPath).replace(/\\/g, '/');
+                const relativePath = path.relative(path.join(media_dir), fullPath).replace(/\\/g, '/');
                 media[name] = {
                     name: name,
                     filename: relativePath,
@@ -57,12 +59,12 @@ function getMediaFiles() {
             }
         });
     }
-    
+
     walkDir(mediaRoot, null);
     return media;
 }
 function getTvShows() {
-    const tvDir = path.join(__dirname, 'media', 'tv');
+    const tvDir = path.join(media_dir, 'tv');
     const entries = fs.readdirSync(tvDir, { withFileTypes: true });
 
     const shows = entries
@@ -94,7 +96,7 @@ app.get('/tv', (req, res) => {
 
 app.get('/tv/:showName', (req, res) => {
     const showName = req.params.showName;
-    const showDir = path.join(__dirname, 'media', 'tv', showName);
+    const showDir = path.join(media_dir, 'tv', showName);
 
     if (!fs.existsSync(showDir)) {
         return res.status(404).send('TV show not found');
@@ -126,7 +128,7 @@ app.get('/tv/:showName', (req, res) => {
 
 app.get('/tv/:showName/:seasonName', (req, res) => {
     const { showName, seasonName } = req.params;
-    const seasonDir = path.join(__dirname, 'media', 'tv', showName, seasonName);
+    const seasonDir = path.join(media_dir, 'tv', showName, seasonName);
 
     if (!fs.existsSync(seasonDir)) {
         return res.status(404).send('Season not found');
@@ -170,7 +172,7 @@ app.get('/tv/:showName/:seasonName', (req, res) => {
 
 app.get('/tv/:showName/:seasonName/:language', (req, res) => {
     const { showName, seasonName, language } = req.params;
-    const langDir = path.join(__dirname, 'media', 'tv', showName, seasonName, language);
+    const langDir = path.join(media_dir, 'tv', showName, seasonName, language);
 
     if (!fs.existsSync(langDir)) {
         return res.status(404).send('Language folder not found');
@@ -210,7 +212,7 @@ app.get('/media/:key', (req, res) => {
         const next = folderItems[index + 1] || null;
 
         // Check for subtitle file
-        const vttPath = path.join(__dirname, 'media', item.filename.replace(/\.mp4$/, '.vtt'));
+        const vttPath = path.join(media_dir, item.filename.replace(/\.mp4$/, '.vtt'));
         const hasSubtitles = fs.existsSync(vttPath);
         if (hasSubtitles) {
             item.subtitle = item.filename.replace(/\.mp4$/, '.vtt'); // relative path for use in <track>
@@ -227,4 +229,4 @@ app.get('/media/:key', (req, res) => {
 });
 
 
-app.listen(3000, () => console.log('Server running on http://localhost:3000'));
+app.listen(80, () => console.log('Server running on http://localhost:80'));
